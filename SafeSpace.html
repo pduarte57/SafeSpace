@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeSpace</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <button type="button" id="btn-tema" class="btn-tema" onclick="alternarTema()" aria-label="Ativar modo escuro" aria-pressed="false">🌙 Modo escuro</button>
+
+    <div id="tela-entrada" class="tela-entrada-estilo">
+        <img src="Logo.png" alt="Logo do SafeSpace" class="logo-entrada">
+        <button id="btn-iniciar" type="button" onclick="entrarNoSite()">Entrar</button>
+    </div>
+
+    <div id="tela-autenticacao" class="container escondido">
+        <p class="branding-texto">Um espaço seguro para você e seu terapeuta.</p>
+
+        <div class="abas">
+            <button id="btn-aba-login" type="button" class="aba-ativa" onclick="alternarAbas('login')">Entrar</button>
+            <button id="btn-aba-cadastro" type="button" onclick="alternarAbas('cadastro')">Criar Conta</button>
+        </div>
+
+        <form id="form-login">
+            <input type="email" id="login-email" placeholder="E-mail" autocomplete="email" required>
+            <span id="erro-login-email" class="erro-texto escondido"></span>
+
+            <input type="password" id="login-senha" placeholder="Senha" autocomplete="current-password" required>
+            <span id="erro-login-geral" class="erro-texto escondido"></span>
+
+            <div class="opcoes-perfil">
+                <label><input type="radio" name="login-perfil" value="paciente" checked> Paciente</label>
+                <label><input type="radio" name="login-perfil" value="psicologo"> Psicólogo</label>
+            </div>
+            <button type="submit">Entrar</button>
+        </form>
+
+        <form id="form-cadastro" class="escondido">
+            <input type="text" id="cad-nome" placeholder="Nome ou apelido" autocomplete="name" required>
+            <span id="erro-cad-nome" class="erro-texto escondido"></span>
+
+            <input type="email" id="cad-email" placeholder="E-mail" autocomplete="email" required>
+            <span id="erro-cad-email" class="erro-texto escondido"></span>
+
+            <input type="password" id="cad-senha" placeholder="Senha" autocomplete="new-password" required>
+            <span id="erro-cad-senha" class="erro-texto escondido"></span>
+
+            <div class="opcoes-perfil">
+                <label><input type="radio" name="cad-perfil" value="paciente" checked> Paciente</label>
+                <label><input type="radio" name="cad-perfil" value="psicologo"> Psicólogo</label>
+            </div>
+            <button type="submit">Cadastrar</button>
+        </form>
+    </div>
+
+    <div id="tela-paciente" class="container painel escondido">
+        <div class="topo-painel">
+            <div>
+                <h1>Área do Paciente</h1>
+                <p class="subtitulo-painel">Seu espaço para registrar emoções, organizar metas e manter a comunicação com seu terapeuta.</p>
+            </div>
+            <div class="perfil-resumo" id="perfil-resumo-paciente"></div>
+        </div>
+
+                <div class="controle-navegacao" aria-label="Organização das funcionalidades">
+            <span>Visualização:</span>
+            <button type="button" class="btn-modo-layout" data-layout="lista" onclick="alterarModoNavegacao('lista')">Lista</button>
+            <button type="button" class="btn-modo-layout" data-layout="paginas" onclick="alterarModoNavegacao('paginas')">Páginas</button>
+        </div>
+        <nav class="navegacao-paginas" aria-label="Navegação das funcionalidades"></nav>
+
+<details class="ajuda-box" data-inicio>
+            <summary>Como usar o SafeSpace</summary>
+            <div class="ajuda-conteudo">
+                <p><strong>Emoções:</strong> registre como você está se sentindo e, se quiser, escreva um contexto.</p>
+                <p><strong>Diário:</strong> suas notas podem ficar privadas ou ser compartilhadas com o terapeuta.</p>
+                <p><strong>Metas:</strong> acompanhe tarefas e objetivos combinados durante o acompanhamento.</p>
+                <p><strong>Chat e agenda:</strong> mantenha a comunicação e escolha um horário disponível.</p>
+                <p><strong>S.O.S.:</strong> use os contatos cadastrados e os recursos de apoio quando precisar de ajuda.</p>
+            </div>
+        </details>
+
+        <div id="relacao-paciente" class="relacao-box" data-inicio></div>
+
+        <div class="resumo-painel" data-inicio>
+            <div id="resumo-paciente" class="resumo-grid"></div>
+            <div class="notificacoes-box">
+                <div class="titulo-pequeno">Notificações e lembretes</div>
+                <div id="notificacoes-paciente" class="notificacoes-lista"></div>
+            </div>
+        </div>
+
+
+        <div class="grid-dashboard">
+
+            <div class="secao-bloco bloco-destaque-sos" data-modulo="sos">
+                <h2>SOS / Emergência</h2>
+                <p class="sos-linha-188"><strong>Atendimento emocional:</strong> <button type="button" id="btn-emergencia-188" class="link-sos btn-numero-sos" onclick="copiarNumero('188', this)" title="Copiar 188">188</button> <a class="btn-ligar" href="tel:188" onclick="iniciarLigacao('188')" aria-label="Ligar para o CVV no número 188">Ligar</a></p>
+                    <div id="feedback-sos" class="feedback-sos" aria-live="polite"></div>
+                    <p class="texto-apoio sos-dica-ligacao">Ao clicar em Ligar, o site tenta abrir o aplicativo de telefone. Se não abrir, use o número copiado ou o botão Copiar.</p>
+
+                <div class="contatos-sos-container">
+                    <h3>Contatos de Confiança</h3>
+                    <div class="add-meta-box flex-wrap">
+                        <input type="text" id="sos-nome" placeholder="Nome do Contato" autocomplete="off">
+                        <input type="tel" id="sos-fone" placeholder="(99) 99999-9999" inputmode="tel" autocomplete="off" maxlength="16" aria-label="Telefone com DDD">
+                        <button type="button" onclick="adicionarContatoSOS()">Salvar</button>
+                    </div>
+                    <span id="erro-sos-fone" class="erro-texto escondido"></span>
+                    <div id="lista-contatos-sos" class="historico-box"></div>
+                </div>
+
+                <div class="exercicios-crise-container">
+                    <h3>Ajuda em momentos difíceis</h3>
+                    <div class="botoes-coluna">
+                        <button type="button" onclick="gerarExercicioCrise('respiracao')">Técnica de Respiração</button>
+                        <button type="button" onclick="gerarExercicioCrise('aterramento')">Exercício dos 5 sentidos</button>
+                    </div>
+                    <div id="exibicao-exercicio" class="exercicio-texto-box escondido"></div>
+                </div>
+            </div>
+
+            <div class="secao-bloco" data-modulo="emocoes">
+                <h2>Meu Jarro de Emoções</h2>
+                <p>Como você está se sentindo? Escolha uma emoção e, se quiser, explique o motivo.</p>
+
+                <div class="jarro-emocoes">
+                    <button type="button" onclick="registrarEmocao('Alegria', 'Alegria.png')">
+                        <img src="Alegria.png" alt="Alegria" class="img-emocao-btn">
+                        <span>Alegria</span>
+                    </button>
+                    <button type="button" onclick="registrarEmocao('Calma', 'Calma.png')">
+                        <img src="Calma.png" alt="Calma" class="img-emocao-btn">
+                        <span>Calma</span>
+                    </button>
+                    <button type="button" onclick="registrarEmocao('Neutro', 'Neutro.png')">
+                        <img src="Neutro.png" alt="Neutro" class="img-emocao-btn">
+                        <span>Neutro</span>
+                    </button>
+                    <button type="button" onclick="registrarEmocao('Tristeza', 'Tristeza.png')">
+                        <img src="Tristeza.png" alt="Tristeza" class="img-emocao-btn">
+                        <span>Tristeza</span>
+                    </button>
+                    <button type="button" onclick="registrarEmocao('Raiva', 'Raiva.png')">
+                        <img src="Raiva.png" alt="Raiva" class="img-emocao-btn">
+                        <span>Raiva</span>
+                    </button>
+                    <button type="button" onclick="registrarEmocao('Medo', 'Medo.png')">
+                        <img src="Medo.png" alt="Medo" class="img-emocao-btn">
+                        <span>Medo</span>
+                    </button>
+                    <button type="button" onclick="registrarEmocao('Ansiedade', 'Ansiedade.png')">
+                        <img src="Ansiedade.png" alt="Ansiedade" class="img-emocao-btn">
+                        <span>Ansiedade</span>
+                    </button>
+                    <button type="button" onclick="registrarEmocao('Confusão', 'Confusão.png')">
+                        <img src="Confusão.png" alt="Confusão" class="img-emocao-btn">
+                        <span>Confusão</span>
+                    </button>
+                    <button type="button" onclick="registrarEmocao('Frustração', 'Frustração.png')">
+                        <img src="Frustração.png" alt="Frustração" class="img-emocao-btn">
+                        <span>Frustração</span>
+                    </button>
+                    <button type="button" onclick="registrarEmocao('Sobrecarga', 'Sobrecarga.png')">
+                        <img src="Sobrecarga.png" alt="Sobrecarga" class="img-emocao-btn">
+                        <span>Sobrecarga</span>
+                    </button>
+                    <button type="button" onclick="registrarEmocao('Insegurança', 'Insegurança.png')">
+                        <img src="Insegurança.png" alt="Insegurança" class="img-emocao-btn">
+                        <span>Insegurança</span>
+                    </button>
+                    <button type="button" onclick="registrarEmocao('Vergonha', 'Vergonha.png')">
+                        <img src="Vergonha.png" alt="Vergonha" class="img-emocao-btn">
+                        <span>Vergonha</span>
+                    </button>
+                </div>
+
+                <textarea id="descricao-emocao" class="campo-emocao" maxlength="300" rows="2" placeholder="Quer contar um pouco mais sobre o que está sentindo? (opcional)"></textarea>
+                <div class="campo-contador" id="contador-emocao">0/300</div>
+
+                <h3>Meus Registros</h3>
+                <div id="lista-registros-paciente" class="historico-box"></div>
+            </div>
+
+            <div class="secao-bloco" data-modulo="diario">
+                <h2>Diário de Reflexão</h2>
+                <div class="campo-busca">
+                    <input type="search" id="busca-diario-paciente" placeholder="Buscar nas minhas notas..." oninput="renderizarDiarioPaciente()">
+                </div>
+                <textarea id="diario-texto" placeholder="Escreva seus pensamentos, dias ou sonhos aqui..."></textarea>
+                <div class="opcoes-privacidade">
+                    <label><input type="checkbox" id="diario-compartilhar"> Compartilhar com o terapeuta</label>
+                </div>
+                <button type="button" onclick="salvarDiario()">Salvar no Diário</button>
+                <h3>Minhas Notas</h3>
+                <div id="lista-diario-paciente" class="historico-box"></div>
+            </div>
+
+            <div class="secao-bloco" data-modulo="metas">
+                <h2>Acompanhamento de Metas</h2>
+                <div class="add-meta-box">
+                    <input type="text" id="nova-meta-texto" maxlength="120" placeholder="Nova tarefa combinada...">
+                    <button type="button" onclick="adicionarMeta()">Adicionar</button>
+                </div>
+                <div id="progresso-metas-paciente" class="progresso-box"></div>
+                <div id="lista-metas-paciente" class="metas-container"></div>
+            </div>
+
+            <div class="secao-bloco" data-modulo="agenda">
+                <h2>Agendamento de Consultas</h2>
+                <p class="texto-apoio">Escolha uma data e um horário livre do seu terapeuta.</p>
+                <div id="calendario-paciente" class="agenda-grid"></div>
+                <div id="status-agenda-paciente" class="status-box escondido"></div>
+            </div>
+
+            <div class="secao-bloco" data-modulo="chat">
+                <h2>Chat Seguro</h2>
+                <div id="chat-status-paciente" class="chat-status"></div>
+                <p class="texto-apoio">Enter envia a mensagem. Shift + Enter cria uma nova linha.</p>
+                <div id="chat-janela-paciente" class="chat-janela" aria-live="polite"></div>
+                <div class="chat-input-box">
+                    <div class="chat-input-wrap">
+                        <textarea id="chat-txt-paciente" class="chat-input" rows="1" maxlength="2000" placeholder="Digite uma mensagem..."></textarea>
+                        <div id="chat-contador-paciente" class="chat-contador">0/2000</div>
+                    </div>
+                    <button type="button" onclick="enviarMensagem('paciente')">Enviar</button>
+                </div>
+            </div>
+
+        </div>
+
+
+        <button class="btn-sair" type="button" onclick="sair()">Sair da conta</button>
+    </div>
+
+    <div id="tela-psicologo" class="container painel escondido">
+        <div class="topo-painel">
+            <div>
+                <h1>Área do Profissional</h1>
+                <p class="subtitulo-painel">Acompanhe os registros dos pacientes e mantenha a comunicação organizada.</p>
+            </div>
+            <div class="perfil-resumo" id="perfil-resumo-psicologo"></div>
+        </div>
+
+                <div class="controle-navegacao" aria-label="Organização das funcionalidades">
+            <span>Visualização:</span>
+            <button type="button" class="btn-modo-layout" data-layout="lista" onclick="alterarModoNavegacao('lista')">Lista</button>
+            <button type="button" class="btn-modo-layout" data-layout="paginas" onclick="alterarModoNavegacao('paginas')">Páginas</button>
+        </div>
+        <nav class="navegacao-paginas" aria-label="Navegação das funcionalidades"></nav>
+
+<details class="ajuda-box" data-inicio>
+            <summary>Como usar a área do profissional</summary>
+            <div class="ajuda-conteudo">
+                <p><strong>Pacientes:</strong> selecione um paciente para atualizar os registros exibidos em cada módulo clínico.</p>
+                <p><strong>Emoções e notas:</strong> acompanhe somente o conteúdo compartilhado pelo paciente selecionado.</p>
+                <p><strong>Prontuário:</strong> registre evoluções clínicas relacionadas ao paciente em acompanhamento.</p>
+                <p><strong>Agenda:</strong> controle horários disponíveis e veja quais estão ocupados.</p>
+                <p><strong>Chat:</strong> a conversa é separada por paciente, facilitando o acompanhamento de cada relação.</p>
+            </div>
+        </details>
+
+        <div id="relacao-psicologo" class="relacao-box" data-inicio></div>
+        <div id="seletor-pacientes-psicologo" class="seletor-pacientes"></div>
+
+        <div class="resumo-painel" data-inicio>
+            <div id="resumo-psicologo" class="resumo-grid"></div>
+            <div class="notificacoes-box">
+                <div class="titulo-pequeno">Notificações e lembretes</div>
+                <div id="notificacoes-psicologo" class="notificacoes-lista"></div>
+            </div>
+        </div>
+
+        <div class="grid-dashboard">
+
+            <div class="secao-bloco" data-modulo="emocoes">
+                <h2>Histórico de Emoções do Paciente</h2>
+                <div id="lista-emocoes" class="historico-box"></div>
+            </div>
+
+            <div class="secao-bloco" data-modulo="grafico">
+                <h2>Dashboard Analítico</h2>
+                <div id="dashboard-grafico" class="grafico-container"></div>
+            </div>
+
+            <div class="secao-bloco" data-modulo="notas">
+                <h2>Notas Compartilhadas</h2>
+                <div class="campo-busca">
+                    <input type="search" id="busca-notas-psicologo" placeholder="Buscar nas notas compartilhadas..." oninput="renderizarDiarioPsicologo()">
+                </div>
+                <div id="lista-diario-psicologo" class="historico-box"></div>
+            </div>
+
+            <div class="secao-bloco" data-modulo="prontuario">
+                <h2>Prontuário Eletrônico</h2>
+                <textarea id="prontuario-texto" placeholder="Registrar evolução clínica..."></textarea>
+                <button type="button" onclick="salvarProntuario()">Salvar Prontuário</button>
+                <span id="erro-prontuario" class="erro-texto escondido"></span>
+                <h3>Evoluções Clínicas</h3>
+                <div id="lista-prontuarios" class="historico-box"></div>
+            </div>
+
+            <div class="secao-bloco" data-modulo="agenda">
+                <h2>Gerenciamento de Horários</h2>
+                <p class="texto-apoio">Clique em um horário livre para bloqueá-lo. Horários agendados ficam protegidos.</p>
+                <div id="calendario-psicologo" class="agenda-grid"></div>
+                <div id="status-agenda-psicologo" class="status-box"></div>
+            </div>
+
+            <div class="secao-bloco" data-modulo="chat">
+                <h2>Chat Seguro</h2>
+                <div id="chat-status-psicologo" class="chat-status"></div>
+                <p class="texto-apoio">Enter envia a mensagem. Shift + Enter cria uma nova linha.</p>
+                <div id="chat-janela-psicologo" class="chat-janela" aria-live="polite"></div>
+                <div class="chat-input-box">
+                    <div class="chat-input-wrap">
+                        <textarea id="chat-txt-psicologo" class="chat-input" rows="1" maxlength="2000" placeholder="Responder paciente..."></textarea>
+                        <div id="chat-contador-psicologo" class="chat-contador">0/2000</div>
+                    </div>
+                    <button type="button" onclick="enviarMensagem('psicologo')">Enviar</button>
+                </div>
+            </div>
+
+        </div>
+
+
+        <button class="btn-sair" type="button" onclick="sair()">Sair da conta</button>
+    </div>
+
+    <div id="tela-selecao-psicologo" class="overlay-selecao escondido" role="dialog" aria-modal="true" aria-labelledby="titulo-selecao-psicologo">
+        <div class="selecao-psicologo-box">
+            <h2 id="titulo-selecao-psicologo">Escolha seu psicólogo</h2>
+            <p id="texto-selecao-psicologo" class="texto-apoio">Escolha um profissional disponível para acompanhar seu atendimento.</p>
+            <div id="lista-psicologos-disponiveis" class="lista-psicologos-disponiveis"></div>
+            <div id="status-selecao-psicologo" class="status-box escondido"></div>
+            <div class="selecao-acoes">
+                <button type="button" id="btn-confirmar-psicologo" class="btn-confirmar" onclick="confirmarSelecaoPsicologo()" disabled>Confirmar</button>
+                <button type="button" id="btn-cancelar-selecao-psicologo" class="btn-cancelar-acao" onclick="fecharSelecaoPsicologo()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
